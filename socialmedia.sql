@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost:3306
--- Generation Time: Apr 09, 2023 at 04:12 AM
+-- Generation Time: Apr 24, 2023 at 02:50 PM
 -- Server version: 8.0.30
 -- PHP Version: 8.1.10
 
@@ -32,7 +32,7 @@ CREATE TABLE `posts` (
   `title` varchar(255) NOT NULL,
   `description` text CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci,
   `user_id` int NOT NULL,
-  `attachments` json DEFAULT NULL,
+  `attachments` varchar(255) DEFAULT NULL,
   `created_at` datetime NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
@@ -42,20 +42,12 @@ CREATE TABLE `posts` (
 
 INSERT INTO `posts` (`id`, `title`, `description`, `user_id`, `attachments`, `created_at`) VALUES
 (23, 'test', 'test', 2, '[]', '2023-04-09 03:25:21'),
-(24, 'knk:jn', 'mkjnmkjn', 3, '[]', '2023-04-09 04:07:01');
-
--- --------------------------------------------------------
-
---
--- Table structure for table `post_reactions`
---
-
-CREATE TABLE `post_reactions` (
-  `id` int NOT NULL,
-  `reaction` enum('like','dislike') NOT NULL,
-  `user_id` int NOT NULL,
-  `post_id` int NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+(24, 'knk:jn', 'mkjnmkjn', 3, '[]', '2023-04-09 04:07:01'),
+(25, 'efmkenzvkn', 'ùùzkb rkb rebe', 2, NULL, '2023-04-23 23:50:18'),
+(26, ',v emrkjbnermkj', 'kznvmekrjber', 2, NULL, '2023-04-23 23:50:38'),
+(27, ',v emrkjbnermkj', 'kznvmekrjber', 2, NULL, '2023-04-23 23:52:08'),
+(28, 'zmkgnjvze', 'klnezerb', 2, NULL, '2023-04-23 23:52:27'),
+(29, 'zmkgnjvze', 'klnezerb', 2, NULL, '2023-04-23 23:53:17');
 
 -- --------------------------------------------------------
 
@@ -97,7 +89,7 @@ CREATE TABLE `users` (
 --
 
 INSERT INTO `users` (`id`, `name`, `email`, `password`, `avatar`, `created_at`) VALUES
-(2, 'ahmed', 'ahmedweldrhouma@gmail.com', '$2y$10$S8T0mQJ/l4NWv7SHavFsJegkOTbV2SR9dmcym7PkeB0TK4/iKibbm', NULL, '2023-04-08 17:10:10'),
+(2, 'ahmed', 'ahmedweldrhouma@gmail.com', '$2y$10$S8T0mQJ/l4NWv7SHavFsJegkOTbV2SR9dmcym7PkeB0TK4/iKibbm', 'uploads/avatars/2077099870.png', '2023-04-08 17:10:10'),
 (3, 'test aaaa', 'testalvnalkvnaev@gmail.com', '$2y$10$JMRtxmEC9levZrTRue1p4.a80sAvuMmNMN3/nSRGwCLyTdUEGB926', 'uploads/avatars/2115995974.PNG', '2023-04-09 02:14:43');
 
 --
@@ -108,12 +100,6 @@ INSERT INTO `users` (`id`, `name`, `email`, `password`, `avatar`, `created_at`) 
 -- Indexes for table `posts`
 --
 ALTER TABLE `posts`
-  ADD PRIMARY KEY (`id`);
-
---
--- Indexes for table `post_reactions`
---
-ALTER TABLE `post_reactions`
   ADD PRIMARY KEY (`id`);
 
 --
@@ -136,13 +122,7 @@ ALTER TABLE `users`
 -- AUTO_INCREMENT for table `posts`
 --
 ALTER TABLE `posts`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=25;
-
---
--- AUTO_INCREMENT for table `post_reactions`
---
-ALTER TABLE `post_reactions`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
+  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=31;
 
 --
 -- AUTO_INCREMENT for table `post_reports`

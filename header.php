@@ -1,4 +1,5 @@
 <?php
+date_default_timezone_set('Africa/Tunis');
 session_start();
 if (!isset($_SESSION['id']) || isset($_GET['logout'])) {
     session_destroy();
@@ -35,8 +36,9 @@ if (!isset($_SESSION['id']) || isset($_GET['logout'])) {
 
     <div class="nav-header bg-white shadow-xs border-0">
         <div class="nav-top">
-            <a href="home.php"><i class="feather-zap text-success display1-size me-2 ms-0"></i><span
-                        class="d-inline-block fredoka-font ls-3 fw-600 text-current font-xxl logo-text mb-0">Med. amine mghirbi</span>
+            <a href="home.php"><span
+                        class="d-inline-block fredoka-font ls-3 fw-600 text-current font-xxl logo-text mb-0"><img
+                            src="images/logo.png" width="250"> </span>
             </a>
         </div>
         <a href="home.php" class="ms-auto p-2 text-center ms-3 menu-icon center-menu-icon">
