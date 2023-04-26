@@ -2,6 +2,17 @@
 require 'bdd.php';
 $error = null;
 if (isset($_POST['register'])) {
+$name=$_POST['user_name'];
+$email = $_POST['email'];
+$password = password_hash($_POST['password'],PASSWORD_DEFAULT); 
+$confirm_password = $_POST['confirm_password'];
+$created_at=date("Y-m-d h:i:s");
+$stmt=$conn->prepare("INSERT INTO users(name,password,email,created_at) VALUES (:nm,:pwd,:en,:cr)");
+$stmt->bindParam(':nm',$name);
+$stmt->bindParam(':pwd', $password);
+$stmt->bindParam(':en', $email);
+$stmt->bindParam(':cr', $created_at);
+$stmt->execute();
 
 }
 ?>
@@ -64,7 +75,7 @@ if (isset($_POST['register'])) {
             <div class="card shadow-none border-0 ms-auto me-auto login-card">
                 <div class="card-body rounded-0 text-left">
                     <h2 class="fw-700 display1-size display2-md-size mb-4">Crée votre Compte</h2>
-                    <form method="POST">
+                    <form method="POST" action="">
                         <?php
                         if ($error != null) {
                             echo '<badge class="badge badge-danger w-100">' . $error . '</badge>';
@@ -80,12 +91,7 @@ if (isset($_POST['register'])) {
                             <input type="text" class="style2-input ps-5 form-control text-grey-900 font-xsss fw-600"
                                    placeholder="Addresse Email" name="email" required>
                         </div>
-                        <div class="form-group mb-3">
-                            <select class="style2-input ps-5 form-control text-grey-900 font-xsss fw-600" name="type" required>
-                                <option value="student">étudiant</option>
-                                <option value="teacher">enseignant</option>
-                            </select>
-                        </div>
+                        
                         <div class="form-group icon-input mb-3">
                             <input type="Password" class="style2-input ps-5 form-control text-grey-900 font-xss ls-3"
                                    placeholder="Mot de passe" name="password" required>
