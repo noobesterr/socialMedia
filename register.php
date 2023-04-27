@@ -2,18 +2,36 @@
 require 'bdd.php';
 $error = null;
 if (isset($_POST['register'])) {
-$name=$_POST['user_name'];
-$email = $_POST['email'];
-$password = password_hash($_POST['password'],PASSWORD_DEFAULT); 
-$confirm_password = $_POST['confirm_password'];
-$created_at=date("Y-m-d h:i:s");
-$stmt=$conn->prepare("INSERT INTO users(name,password,email,created_at) VALUES (:nm,:pwd,:en,:cr)");
-$stmt->bindParam(':nm',$name);
-$stmt->bindParam(':pwd', $password);
-$stmt->bindParam(':en', $email);
-$stmt->bindParam(':cr', $created_at);
-$stmt->execute();
+    if ($_POST['password'] == $_POST['confirm_password']) {
+        $stmt = $conn->prepare("SELECT * FROM users WHERE email=:em");
 
+        $stmt->bindParam(':em', $_POST['email']);
+
+        $stmt->execute();
+        $userExist = $stmt->fetchObject();
+        if (!$userExist) {
+            $name = $_POST['user_name'];
+            $email = $_POST['email'];
+            //$password = $_POST['password'];
+            $password = password_hash($_POST['password'], PASSWORD_DEFAULT);
+            $confirm_password = $_POST['confirm_password'];
+            $created_at = date("Y-m-d H:i:s");
+            $stmt = $conn->prepare("INSERT INTO users(name,password,email,created_at) VALUES (:nm,:pwd,:em,:cr)");
+            $stmt->bindParam(':nm', $name);
+            $stmt->bindParam(':pwd', $password);
+            $stmt->bindParam(':em', $email);
+            $stmt->bindParam(':cr', $created_at);
+            $stmt->execute();
+            if ($stmt->rowCount() != 0) {
+                $success = "Your account has been created successfully";
+            } else {
+                $error = "Failed to create account !!";
+            }
+        } else {
+            $error = "Email already in use!!!";
+        }
+    } else
+        $error = "Confirm password does not match!!";
 }
 ?>
 <!DOCTYPE html>
@@ -24,7 +42,7 @@ $stmt->execute();
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>EPI Network</title>
-
+    ²
     <link rel="stylesheet" href="css/themify-icons.css">
     <link rel="stylesheet" href="css/feather.css">
     <!-- Favicon icon -->
@@ -36,51 +54,47 @@ $stmt->execute();
 </head>
 
 <body class="color-theme-blue">
-
-<div class="preloader"></div>
-
-<div class="main-wrap">
-
-    <div class="nav-header bg-transparent shadow-none border-0">
-        <div class="nav-top w-100">
-            <a href="index.html"><span
+    <div class="preloader"></div>
+    <div class="main-wrap">
+        <div class="nav-header bg-transparent shadow-none border-0">
+            <div class="nav-top w-100">
+                <a href="index.html"><span
                         class="d-inline-block fredoka-font ls-3 fw-600 text-current font-xxl logo-text mb-0"><img
                             src="images/logo.png" width="250"> </span>
-            </a>
-            <a href="#" class="mob-menu ms-auto me-2 chat-active-btn"><i
+                </a>
+                <a href="#" class="mob-menu ms-auto me-2 chat-active-btn"><i
                         class="feather-message-circle text-grey-900 font-sm btn-round-md bg-greylight"></i></a>
-            <a href="default-video.html" class="mob-menu me-2"><i
+                <a href="default-video.html" class="mob-menu me-2"><i
                         class="feather-video text-grey-900 font-sm btn-round-md bg-greylight"></i></a>
-            <a href="#" class="me-2 menu-search-icon mob-menu"><i
+                <a href="#" class="me-2 menu-search-icon mob-menu"><i
                         class="feather-search text-grey-900 font-sm btn-round-md bg-greylight"></i></a>
-            <button class="nav-menu me-0 ms-2"></button>
+                <button class="nav-menu me-0 ms-2"></button>
 
-            <a href="login.php"
-               class="header-btn d-none d-lg-block bg-dark fw-500 text-white font-xsss p-3 ms-auto w100 text-center lh-20 rounded-xl">Connexion</a>
-            <a href="register.php"
-               class="header-btn d-none d-lg-block bg-current fw-500 text-white font-xsss p-3 ms-2 w100 text-center lh-20 rounded-xl">S'inscrire</a>
-
-        </div>
-
-
-    </div>
-
-    <div class="row">
-        <div class="col-xl-5 d-none d-xl-block p-0 vh-100 bg-image-cover bg-no-repeat">
-            <div class="h-100 d-flex align-items-center justify-content-end">
-                <img src="images/login-bg.png" width="525" height="525">
+                <a href="login.php"
+                    class="header-btn d-none d-lg-block bg-dark fw-500 text-white font-xsss p-3 ms-auto w100 text-center lh-20 rounded-xl">Connexion</a>
+                <a href="register.php"
+                    class="header-btn d-none d-lg-block bg-current fw-500 text-white font-xsss p-3 ms-2 w100 text-center lh-20 rounded-xl">S'inscrire</a>
             </div>
         </div>
-        <div class="col-xl-7 vh-100 align-items-center d-flex bg-white rounded-3 overflow-hidden">
-            <div class="card shadow-none border-0 ms-auto me-auto login-card">
-                <div class="card-body rounded-0 text-left">
-                    <h2 class="fw-700 display1-size display2-md-size mb-4">Crée votre Compte</h2>
-                    <form method="POST" action="">
-                        <?php
-                        if ($error != null) {
-                            echo '<badge class="badge badge-danger w-100">' . $error . '</badge>';
-                        }
-                        ?>
+        <div class="row">
+            <div class="col-xl-5 d-none d-xl-block p-0 vh-100 bg-image-cover bg-no-repeat">
+                <div class="h-100 d-flex align-items-center justify-content-end">
+                    <img src="images/login-bg.png" width="525" height="525">
+                </div>
+            </div>
+            <div class="col-xl-7 vh-100 align-items-center d-flex bg-white rounded-3 overflow-hidden">
+                <div class="card shadow-none border-0 ms-auto me-auto login-card">
+                    <div class="card-body rounded-0 text-left">
+                        <h2 class="fw-700 display1-size display2-md-size mb-4">Crée votre Compte</h2>
+                        <form method="POST" action="">
+                            <?php
+                            if ($error != null) {
+                                echo '<badge class="badge badge-danger w-100">' . $error . '</badge>'; /*BADGEEEEEEE*/
+                            }
+                            if (isset($success)) {
+                                echo '<badge class="badge badge-success w-100">' . $success . '</badge>'; /*BADGEEEEEEE*/
+                            }
+                            ?>
                         <div class="form-group icon-input mb-3">
                             <i class="font-sm ti-user text-grey-500 pe-0"></i>
                             <input type="text" class="style2-input ps-5 form-control text-grey-900 font-xsss fw-600"
