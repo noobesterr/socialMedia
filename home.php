@@ -2,9 +2,18 @@
 include 'header.php';
 require 'bdd.php';
 if (isset($_POST['create_post'])) {
-    /**
-     * insert script of creating a post
-     */
+    $title = $_POST['title'];
+    $description = $_POST['description'];
+    $photos = $_POST['photos'];
+    $user_id = $_SESSION['id'];
+    $created_at = date("Y-m-d H:i:s");
+    $stmt = $conn->prepare("INSERT INTO posts(title,description,user_id,attachements,created_at) VALUES (:tit,:desc,:uid,:pic,:cr)");
+    $stmt->bindParam(':tit', $title);
+    $stmt->bindParam(':desc', $description);
+    $stmt->bindParam(':pic', $photos);
+    $stmt->bindParam(':uid', $user_id);
+    $stmt->bindParam(':cr', $created_at);
+    $stmt->execute();
 }
 // get All posts from my database
 

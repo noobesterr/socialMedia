@@ -1,12 +1,31 @@
 <?php
 require 'bdd.php';
 $error = null;
-if (isset($_POST['login'])){
+if (isset($_POST['login'])) {
+    $stmt = $conn->prepare("SELECT * FROM users WHERE email=:em");
 
+    $stmt->bindParam(':em', $_POST['email']);
+    $stmt->execute();
+    //stocker les info de user dans $userExist
+    $userExist = $stmt->fetchObject();
+    if ($userExist) {
+        if (password_verify($_POST['password'], $userExist->password)) {
+            session_start();
+            $_SESSION['id'] = $userExist->id;
+            $_SESSION['name'] = $userExist->name;
+            $_SESSION['avatar'] = $userExist->avatar != null ? $userExist->avatar : "images/profile-2.png";
+            header("Location: home.php");
+        } else {
+            var_dump("password wrong");
+        }
+    } else {
+        var_dump("account does not exist");
+    }
 }
 ?>
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -29,17 +48,21 @@ if (isset($_POST['login'])){
 
         <div class="nav-header bg-transparent shadow-none border-0">
             <div class="nav-top w-100">
-                <a href="index.php"><span class="d-inline-block fredoka-font ls-3 fw-600 text-current font-xxl logo-text mb-0"><img
-                                src="images/logo.png" width="250"> </span> </a>
-                <a href="#" class="mob-menu ms-auto me-2 chat-active-btn"><i class="feather-message-circle text-grey-900 font-sm btn-round-md bg-greylight"></i></a>
-                <a href="default-video.html" class="mob-menu me-2"><i class="feather-video text-grey-900 font-sm btn-round-md bg-greylight"></i></a>
-                <a href="#" class="me-2 menu-search-icon mob-menu"><i class="feather-search text-grey-900 font-sm btn-round-md bg-greylight"></i></a>
+                <a href="index.php"><span
+                        class="d-inline-block fredoka-font ls-3 fw-600 text-current font-xxl logo-text mb-0"><img
+                            src="images/logo.png" width="250"> </span> </a>
+                <a href="#" class="mob-menu ms-auto me-2 chat-active-btn"><i
+                        class="feather-message-circle text-grey-900 font-sm btn-round-md bg-greylight"></i></a>
+                <a href="default-video.html" class="mob-menu me-2"><i
+                        class="feather-video text-grey-900 font-sm btn-round-md bg-greylight"></i></a>
+                <a href="#" class="me-2 menu-search-icon mob-menu"><i
+                        class="feather-search text-grey-900 font-sm btn-round-md bg-greylight"></i></a>
                 <button class="nav-menu me-0 ms-2"></button>
 
                 <a href="login.php"
-                   class="header-btn d-none d-lg-block bg-dark fw-500 text-white font-xsss p-3 ms-auto w100 text-center lh-20 rounded-xl">Connexion</a>
+                    class="header-btn d-none d-lg-block bg-dark fw-500 text-white font-xsss p-3 ms-auto w100 text-center lh-20 rounded-xl">Connexion</a>
                 <a href="register.php"
-                   class="header-btn d-none d-lg-block bg-current fw-500 text-white font-xsss p-3 ms-2 w100 text-center lh-20 rounded-xl">S'inscrire</a>
+                    class="header-btn d-none d-lg-block bg-current fw-500 text-white font-xsss p-3 ms-2 w100 text-center lh-20 rounded-xl">S'inscrire</a>
             </div>
         </div>
 
@@ -56,23 +79,30 @@ if (isset($_POST['login'])){
                         <form method="post">
                             <div class="form-group icon-input mb-3">
                                 <i class="font-sm ti-email text-grey-500 pe-0"></i>
-                                <input type="text" class="style2-input ps-5 form-control text-grey-900 font-xsss fw-600" placeholder="Votre Email" name="email">
+                                <input type="text" class="style2-input ps-5 form-control text-grey-900 font-xsss fw-600"
+                                    placeholder="Votre Email" name="email">
                             </div>
                             <div class="form-group icon-input mb-1">
-                                <input type="Password" class="style2-input ps-5 form-control text-grey-900 font-xss ls-3" placeholder="Votre mot de passe" name="password">
+                                <input type="Password"
+                                    class="style2-input ps-5 form-control text-grey-900 font-xss ls-3"
+                                    placeholder="Votre mot de passe" name="password">
                                 <i class="font-sm ti-lock text-grey-500 pe-0"></i>
                             </div>
                             <div class="col-sm-12 p-0 text-left">
-                                <div class="form-group mb-1"><button class="form-control text-center style2-input text-white fw-600 bg-dark border-0 p-0" type="submit" name="login">Se connecter</button></div>
-                                <h6 class="text-grey-500 font-xsss fw-500 mt-0 mb-0 lh-32">Vous etes pas inscrit <a href="register.php" class="fw-700 ms-1">S'inscrire</a></h6>
+                                <div class="form-group mb-1"><button
+                                        class="form-control text-center style2-input text-white fw-600 bg-dark border-0 p-0"
+                                        type="submit" name="login">Se connecter</button></div>
+                                <h6 class="text-grey-500 font-xsss fw-500 mt-0 mb-0 lh-32">Vous etes pas inscrit <a
+                                        href="register.php" class="fw-700 ms-1">S'inscrire</a></h6>
                             </div>
                         </form>
                     </div>
-                </div> 
+                </div>
             </div>
         </div>
     </div>
     <script src="js/plugin.js"></script>
     <script src="js/scripts.js"></script>
 </body>
+
 </html>
